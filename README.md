@@ -6,7 +6,7 @@ This web application write in Reactjs for frontend and Go for the backend.
 Installation:
 - Install Go first (https://go.dev/doc/install).
 - Clone this repo in your root folder or your Go work environment.
-- On terminal cd to this Pokemon folder and run command "go build .".
+- On terminal cd to this Pokemon folder and run command "go build . && ./app".
 - Now open localhost on browser.
 
 Notes:
