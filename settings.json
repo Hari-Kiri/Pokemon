@@ -1,0 +1,15 @@
+{
+    "settings": {
+        "name": "Pokemon Test Backend",
+        "port": 80,
+        "organisation": "Negara Kesatuan Republik Indonesia",
+        "version": "1.0"
+    },
+    "databaseConfiguration": {
+        "user": "root",
+        "password": "",
+        "connectionType": "tcp",
+        "hostname": "localhost",
+        "databaseName": "mydb"
+    }
+}

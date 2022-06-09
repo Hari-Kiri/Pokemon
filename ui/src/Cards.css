@@ -1,0 +1,10 @@
+.pokemon-card-header-pic .card-header {
+    height: 40vw;
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position: center;
+    color: #fff;
+}
+.pokemon-card-header-pic .card-content-padding .date {
+    color: #8e8e93;
+}
