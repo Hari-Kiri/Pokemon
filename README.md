@@ -16,4 +16,4 @@ Installation with docker:
 
 Notes:
 - The default port for this application is 80, but You can change it in "settings.json" file.
-- If You want to use docker and Your system won't let docker use port 80, You can use another port then set port forwarding on port 80 forward to Your assigned port for docker pokemon container.
+- If You want to use docker and Your system won't let docker use port 80, You can assign another port then set port forwarding on port 80 forward to Your assigned port for docker pokemon container.
