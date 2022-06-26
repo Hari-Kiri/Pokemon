@@ -20,9 +20,6 @@ import (
 // HTML parser
 var htmlTemplates = template.Must(template.ParseFiles("./ui/build/index.html"))
 
-// Sanitize URL path using regexp
-var validPath = "^/(test|pokemon+)$|^/(pokemon)/([a-zA-Z0-9]+)$"
-
 // Function constructor
 func main() {
 	// Load application settings parameter
@@ -36,17 +33,17 @@ func main() {
 	// Handle web application user interface components request
 	http.Handle("/ui/", http.StripPrefix("/ui/", http.FileServer(http.Dir("./ui"))))
 	// Handle web root request
-	http.HandleFunc("/", goalMakeHandler.HandleRequest(rootHandler, validPath))
+	http.HandleFunc("/", goalMakeHandler.HandleRequest(rootHandler, "/"))
 	// Handle test page (its just for testing webserver online or not) request
-	http.HandleFunc("/test", goalMakeHandler.HandleRequest(testHandler, validPath))
+	http.HandleFunc("/test", goalMakeHandler.HandleRequest(testHandler, "/test"))
 	// Handle pokemon page request
-	http.HandleFunc("/pokemon", goalMakeHandler.HandleRequest(pokemonHandler, validPath))
+	http.HandleFunc("/pokemon", goalMakeHandler.HandleRequest(pokemonHandler, "/pokemon"))
 	// Handle catching request
-	http.HandleFunc("/pokemon/catch", goalMakeHandler.HandleRequest(catchHandler, validPath))
+	http.HandleFunc("/pokemon/catch", goalMakeHandler.HandleRequest(catchHandler, "/pokemon/catch"))
 	// Handle catching request
-	http.HandleFunc("/pokemon/getnickname", goalMakeHandler.HandleRequest(getNickNameHandler, validPath))
+	http.HandleFunc("/pokemon/getnickname", goalMakeHandler.HandleRequest(getNickNameHandler, "/pokemon/getnickname"))
 	// Handle prime request
-	http.HandleFunc("/pokemon/release", goalMakeHandler.HandleRequest(releaseHandler, validPath))
+	http.HandleFunc("/pokemon/release", goalMakeHandler.HandleRequest(releaseHandler, "/pokemon/release"))
 	// Run HTTP server
 	log.Println("[info] Webserver started and serving "+loadApplicationSettings.Settings.Name+" on port",
 		loadApplicationSettings.Settings.Port)
