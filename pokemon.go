@@ -2,10 +2,6 @@ package main
 
 import (
 	"fmt"
-	"goal/applicationSettingsLoader"
-	"goal/json"
-	"goal/makeHandler"
-	"goal/renderTemplate"
 	"html/template"
 	"io/ioutil"
 	"log"
@@ -14,6 +10,11 @@ import (
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/Hari-Kiri/goalApplicationSettingsLoader"
+	"github.com/Hari-Kiri/goalJson"
+	"github.com/Hari-Kiri/goalMakeHandler"
+	"github.com/Hari-Kiri/goalRenderTemplate"
 )
 
 // HTML parser
@@ -26,7 +27,7 @@ var validPath = "^/(test|pokemon+)$|^/(pokemon)/([a-zA-Z0-9]+)$"
 func main() {
 	// Load application settings parameter
 	log.Println("[info] Starting webserver!")
-	loadApplicationSettings, error := applicationSettingsLoader.LoadSettings()
+	loadApplicationSettings, error := goalApplicationSettingsLoader.LoadSettings()
 	// If load application settings parameter return error handle it
 	if error != nil {
 		log.Fatal("[error main()] Error opening application settings file: " + error.Error())
@@ -35,17 +36,17 @@ func main() {
 	// Handle web application user interface components request
 	http.Handle("/ui/", http.StripPrefix("/ui/", http.FileServer(http.Dir("./ui"))))
 	// Handle web root request
-	http.HandleFunc("/", makeHandler.HandleRequest(rootHandler, validPath))
+	http.HandleFunc("/", goalMakeHandler.HandleRequest(rootHandler, validPath))
 	// Handle test page (its just for testing webserver online or not) request
-	http.HandleFunc("/test", makeHandler.HandleRequest(testHandler, validPath))
+	http.HandleFunc("/test", goalMakeHandler.HandleRequest(testHandler, validPath))
 	// Handle pokemon page request
-	http.HandleFunc("/pokemon", makeHandler.HandleRequest(pokemonHandler, validPath))
+	http.HandleFunc("/pokemon", goalMakeHandler.HandleRequest(pokemonHandler, validPath))
 	// Handle catching request
-	http.HandleFunc("/pokemon/catch", makeHandler.HandleRequest(catchHandler, validPath))
+	http.HandleFunc("/pokemon/catch", goalMakeHandler.HandleRequest(catchHandler, validPath))
 	// Handle catching request
-	http.HandleFunc("/pokemon/getnickname", makeHandler.HandleRequest(getNickNameHandler, validPath))
+	http.HandleFunc("/pokemon/getnickname", goalMakeHandler.HandleRequest(getNickNameHandler, validPath))
 	// Handle prime request
-	http.HandleFunc("/pokemon/release", makeHandler.HandleRequest(releaseHandler, validPath))
+	http.HandleFunc("/pokemon/release", goalMakeHandler.HandleRequest(releaseHandler, validPath))
 	// Run HTTP server
 	log.Println("[info] Webserver started and serving "+loadApplicationSettings.Settings.Name+" on port",
 		loadApplicationSettings.Settings.Port)
@@ -62,7 +63,7 @@ func rootHandler(responseWriter http.ResponseWriter, request *http.Request) {
 // Test page handler
 func testHandler(responseWriter http.ResponseWriter, request *http.Request) {
 	// Http ok response
-	okResponse, _ := json.JsonEncode(map[string]interface{}{
+	okResponse, _ := goalJson.JsonEncode(map[string]interface{}{
 		"response": true,
 		"code":     200,
 		"message":  "Go net/http webserver online"},
@@ -76,11 +77,11 @@ func testHandler(responseWriter http.ResponseWriter, request *http.Request) {
 // Pokemon page handler
 func pokemonHandler(responseWriter http.ResponseWriter, request *http.Request) {
 	// Load application settings data
-	appSettings, error := applicationSettingsLoader.LoadSettings()
+	appSettings, error := goalApplicationSettingsLoader.LoadSettings()
 	// If load application settings data return error handle it
 	if error != nil {
 		// Http error response
-		errorResponse, _ := json.JsonEncode(map[string]interface{}{
+		errorResponse, _ := goalJson.JsonEncode(map[string]interface{}{
 			"response": false,
 			"code":     500,
 			"message":  "page failed to serve"},
@@ -91,7 +92,7 @@ func pokemonHandler(responseWriter http.ResponseWriter, request *http.Request) {
 		return
 	}
 	// Open home page
-	renderTemplate.Process(htmlTemplates, responseWriter, "index", appSettings, request)
+	goalRenderTemplate.Process(htmlTemplates, responseWriter, "index", appSettings, request)
 }
 
 // Catch page handler
@@ -101,7 +102,7 @@ func catchHandler(responseWriter http.ResponseWriter, request *http.Request) {
 	randomIntn := rand.Intn(2)
 	// 0 false (frontend failed)
 	if randomIntn != 1 {
-		catchResponse, _ := json.JsonEncode(map[string]interface{}{
+		catchResponse, _ := goalJson.JsonEncode(map[string]interface{}{
 			"response": false,
 			"code":     200,
 			"message":  "result of catching pokemon"},
@@ -113,7 +114,7 @@ func catchHandler(responseWriter http.ResponseWriter, request *http.Request) {
 		return
 	}
 	// 1 true (frontend success)
-	catchResponse, _ := json.JsonEncode(map[string]interface{}{
+	catchResponse, _ := goalJson.JsonEncode(map[string]interface{}{
 		"response": true,
 		"code":     200,
 		"message":  "result of catching pokemon"},
@@ -130,7 +131,7 @@ func getNickNameHandler(responseWriter http.ResponseWriter, request *http.Reques
 	requestBody, errorRequestBody := ioutil.ReadAll(request.Body)
 	if errorRequestBody != nil {
 		// Http error response
-		errorResponse, _ := json.JsonEncode(map[string]interface{}{
+		errorResponse, _ := goalJson.JsonEncode(map[string]interface{}{
 			"response": false,
 			"code":     500,
 			"message":  "cannot read request body"},
@@ -144,7 +145,7 @@ func getNickNameHandler(responseWriter http.ResponseWriter, request *http.Reques
 	// Http request body empty
 	if requestBodyString == "" {
 		// Http error response
-		errorResponse, _ := json.JsonEncode(map[string]interface{}{
+		errorResponse, _ := goalJson.JsonEncode(map[string]interface{}{
 			"response": false,
 			"code":     406,
 			"message":  "request body empty"},
@@ -154,11 +155,11 @@ func getNickNameHandler(responseWriter http.ResponseWriter, request *http.Reques
 		return
 	}
 	// Decode json request body
-	requestBodyDecoded, _ := json.JsonDecode(requestBodyString)
+	requestBodyDecoded, _ := goalJson.JsonDecode(requestBodyString)
 	// No previous nickname then give 0 on last character of current nickname as new nickname
 	if requestBodyDecoded["previousNickname"] == nil {
 		// 1 true (frontend success)
-		newNicknameResponse, _ := json.JsonEncode(map[string]interface{}{
+		newNicknameResponse, _ := goalJson.JsonEncode(map[string]interface{}{
 			"response": true,
 			"code":     200,
 			"nickname": fmt.Sprintf("%v", requestBodyDecoded["currentNickname"]) + "-" + "0"},
@@ -173,7 +174,7 @@ func getNickNameHandler(responseWriter http.ResponseWriter, request *http.Reques
 	previousContainStripe := strings.Contains(fmt.Sprintf("%v", requestBodyDecoded["previousNickname"]), "-")
 	// Previous nickname is first nickname assignment then give 1 on last character of previous nickname as new nickname
 	if !previousContainStripe {
-		newNicknameResponse, _ := json.JsonEncode(map[string]interface{}{
+		newNicknameResponse, _ := goalJson.JsonEncode(map[string]interface{}{
 			"response": true,
 			"code":     200,
 			"nickname": fmt.Sprintf("%v", requestBodyDecoded["previousNickname"]) + "-" + "1"},
@@ -190,7 +191,7 @@ func getNickNameHandler(responseWriter http.ResponseWriter, request *http.Reques
 		strconv.Atoi(strings.Split(fmt.Sprintf("%v", requestBodyDecoded["previousNickname"]), "-")[1])
 	if errorParseIntPrevious != nil {
 		// Http error response
-		errorResponse, _ := json.JsonEncode(map[string]interface{}{
+		errorResponse, _ := goalJson.JsonEncode(map[string]interface{}{
 			"response": false,
 			"code":     500,
 			"message":  "processing previousNickname failed"},
@@ -204,7 +205,7 @@ func getNickNameHandler(responseWriter http.ResponseWriter, request *http.Reques
 		strconv.Atoi(strings.Split(fmt.Sprintf("%v", requestBodyDecoded["currentNickname"]), "-")[1])
 	if errorParseIntCurrent != nil {
 		// Http error response
-		errorResponse, _ := json.JsonEncode(map[string]interface{}{
+		errorResponse, _ := goalJson.JsonEncode(map[string]interface{}{
 			"response": false,
 			"code":     500,
 			"message":  "processing currentNickname failed"},
@@ -214,7 +215,7 @@ func getNickNameHandler(responseWriter http.ResponseWriter, request *http.Reques
 		return
 	}
 	fibonacciValue := fmt.Sprintf("%v", currentContainNumber+previousContainNumber)
-	newNicknameResponse, _ := json.JsonEncode(map[string]interface{}{
+	newNicknameResponse, _ := goalJson.JsonEncode(map[string]interface{}{
 		"response": true,
 		"code":     200,
 		"nickname": strings.Split(fmt.Sprintf("%v", requestBodyDecoded["currentNickname"]), "-")[0] + "-" + fibonacciValue},
@@ -244,7 +245,7 @@ func releaseHandler(responseWriter http.ResponseWriter, request *http.Request) {
 	}
 	log.Println("[info] check random number", resultCheckRandomNumber)
 	// Http ok response
-	okResponse, _ := json.JsonEncode(map[string]interface{}{
+	okResponse, _ := goalJson.JsonEncode(map[string]interface{}{
 		"response": resultCheckRandomNumber,
 		"code":     200,
 		"message":  "random number generated " + fmt.Sprintf("%v", randomNumbers)},

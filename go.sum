@@ -1,0 +1,8 @@
+github.com/Hari-Kiri/goalApplicationSettingsLoader v0.0.0-20220622041805-48ceb0d61441 h1:G6+cQI0ZUFUcFCuzDxKPcgGx1oC/qZK6oOOqZ7O/IQ4=
+github.com/Hari-Kiri/goalApplicationSettingsLoader v0.0.0-20220622041805-48ceb0d61441/go.mod h1:Sc7yrkmrv3hVE3D95IG5Ejo0ksJPXs+dHK9hwB4DeCs=
+github.com/Hari-Kiri/goalJson v0.0.0-20220622041903-6e78d8ccc74f h1:5X5lJx11wSBy2yC6+SZt9NVAkTWU/hxQYIMRMLv9m14=
+github.com/Hari-Kiri/goalJson v0.0.0-20220622041903-6e78d8ccc74f/go.mod h1:KjIxD80e0+cDNEoitZbjBR3zBBcmiLHhGYaz5luZR1U=
+github.com/Hari-Kiri/goalMakeHandler v0.0.0-20220621164446-f4625d7158eb h1:Ez8SVVaqUkf8bn8t/QLseQeusmtJYf0ZNS4sfrd388w=
+github.com/Hari-Kiri/goalMakeHandler v0.0.0-20220621164446-f4625d7158eb/go.mod h1:XNPc6tnSWtOuXrUt4w1wZ24rd4Mp/DF+4KZHYF/j18A=
+github.com/Hari-Kiri/goalRenderTemplate v0.0.0-20220626135602-62ccc2eed6e1 h1:JKvkCN9hmM/eg8wdPyqxzhl/QCaki1obPHARASvzKRY=
+github.com/Hari-Kiri/goalRenderTemplate v0.0.0-20220626135602-62ccc2eed6e1/go.mod h1:EWa1nqsxUrJmie+X0/Hdyu9pHXmw8zXjzLy7p7LN5iI=
