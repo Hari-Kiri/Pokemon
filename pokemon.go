@@ -31,23 +31,21 @@ func main() {
 		return
 	}
 	// Handle web application user interface components request
-	http.Handle("/ui/", http.StripPrefix("/ui/", http.FileServer(http.Dir("./ui"))))
+	goalMakeHandler.HandleFileRequest("/ui/", "./ui")
 	// Handle web root request
-	http.HandleFunc("/", goalMakeHandler.HandleRequest(rootHandler, "/"))
+	goalMakeHandler.HandleRequest(rootHandler, "/")
 	// Handle test page (its just for testing webserver online or not) request
-	http.HandleFunc("/test", goalMakeHandler.HandleRequest(testHandler, "/test"))
+	goalMakeHandler.HandleRequest(testHandler, "/test")
 	// Handle pokemon page request
-	http.HandleFunc("/pokemon", goalMakeHandler.HandleRequest(pokemonHandler, "/pokemon"))
+	goalMakeHandler.HandleRequest(pokemonHandler, "/pokemon")
 	// Handle catching request
-	http.HandleFunc("/pokemon/catch", goalMakeHandler.HandleRequest(catchHandler, "/pokemon/catch"))
+	goalMakeHandler.HandleRequest(catchHandler, "/pokemon/catch")
 	// Handle catching request
-	http.HandleFunc("/pokemon/getnickname", goalMakeHandler.HandleRequest(getNickNameHandler, "/pokemon/getnickname"))
+	goalMakeHandler.HandleRequest(getNickNameHandler, "/pokemon/getnickname")
 	// Handle prime request
-	http.HandleFunc("/pokemon/release", goalMakeHandler.HandleRequest(releaseHandler, "/pokemon/release"))
+	goalMakeHandler.HandleRequest(releaseHandler, "/pokemon/release")
 	// Run HTTP server
-	log.Println("[info] Webserver started and serving "+loadApplicationSettings.Settings.Name+" on port",
-		loadApplicationSettings.Settings.Port)
-	log.Fatal(http.ListenAndServe(fmt.Sprint(":", loadApplicationSettings.Settings.Port), nil))
+	goalMakeHandler.Serve(loadApplicationSettings.Settings.Name, loadApplicationSettings.Settings.Port)
 }
 
 // Web root handler
