@@ -11,7 +11,7 @@ Installation with source code:
 
 Installation with docker:
 - Open terminal
-- Run command "docker run -tdp 22:22 -p 80:80 -e TZ=$(timedatectl | sed -n 's/^\s*Time zone: \(.*\) (.*/\1/p') --name pokemon bakeno/pokemon:1.1"
+- Run command "docker run -tdp 22:22 -p 80:80 -e TZ=$(timedatectl | sed -n 's/^\s*Time zone: \(.*\) (.*/\1/p') --name pokemon bakeno/pokemon:latest"
 
 Notes:
 - The default port for this application is 80, but You can change it in "settings.json" file.
