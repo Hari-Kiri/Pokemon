@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { 
     f7,
     Page,
@@ -7,7 +7,9 @@ import {
     CardHeader,
     CardContent,
     CardFooter,
-    Link
+    Link,
+    Row,
+    Col
 } from 'framework7-react';
 import './Cards.css';
 
@@ -15,16 +17,11 @@ var pokeapiUrl = 'https://pokeapi.co/api/v2/pokemon?limit=5';
 const WarningAlertTitle = '<i class="icon f7-icons color-orange" style="font-size: 35px;">exclamationmark</i>';
 
 const ListPage = ({ myPokemonList, f7router }) => {
-    const [consumePokeapi, setConsumePokeapi] = useState(true);
-    const [pokemonList, setPokemonList] = useState([]);
     const [showPreloader, setShowPreloader] = useState(true);
-    const listItem = [];
-
-    const loadMore = () => { if (!consumePokeapi) setConsumePokeapi(true) }
-    
-    const getPokemonDetail = (pokeapiResultsArray) => {
-        pokeapiResultsArray.forEach(element => {
-            fetch(element.url, {method: 'GET'})
+    const [pokemonList, setPokemonList] = useState([]);
+    const getPokemonDetail = useCallback((pokeapiResultsArray) => {
+        for (let i = 0; i < pokeapiResultsArray.length; i++) {
+            fetch(pokeapiResultsArray[i].url, {method: 'GET'})
             .then((response) => response.json())
             .then((response) => {
                 if (response.sprites.length <= 0) {
@@ -77,9 +74,10 @@ const ListPage = ({ myPokemonList, f7router }) => {
                 console.error('error:', error);
                 return;
             });
-        });
-    }
+        }
+    }, []);
 
+    const [consumePokeapi, setConsumePokeapi] = useState(true);
     useEffect(() => {
         fetch(pokeapiUrl, {method: 'GET'})
         .then((response) => response.json())
@@ -107,37 +105,49 @@ const ListPage = ({ myPokemonList, f7router }) => {
             setShowPreloader(false);
             console.error('error:', error);
         });
-    }, [consumePokeapi, myPokemonList]);
+    }, [consumePokeapi, myPokemonList, getPokemonDetail]);
 
-    pokemonList.forEach(element => {
-        listItem.push(
-           <Card className="pokemon-card-header-pic">
-                <CardHeader
-                    className="no-border"
-                    valign="bottom"
-                    style={{
-                        backgroundImage: `url(${element.src})`,
-                    }}
-                />
-                <CardContent>
-                    <h1>{element.title.charAt(0).toUpperCase() + element.title.slice(1)}</h1>
-                </CardContent>
-                <CardFooter>
-                    <Link onClick={() => {
-                        f7router.navigate('/detail/', {
-                            props: {
-                                myPokemonList: myPokemonList,
-                                title: element.title.charAt(0).toUpperCase() + element.title.slice(1),
-                                src: element.src,
-                                moves: element.moves,
-                                types: element.types,
-                            }
-                        });
-                    }}><h3>Detail</h3></Link>
-                </CardFooter>
-            </Card>
-        );
-    });
+    const [listItem, setListItem] = useState([]);
+    useEffect(() => {
+        let listItemElement = [];
+        for (let i = 0; i < pokemonList.length; i++) {
+            listItemElement.push(
+                <Col key={pokemonList[i].subtitle} width="100" medium="50" large="25" xlarge="20">
+                    <Card className="pokemon-card-header-pic">
+                        <CardHeader
+                            className="no-border"
+                            valign="bottom"
+                            style={{
+                                backgroundImage: `url(${pokemonList[i].src})`,
+                                height: "200px"
+                            }}
+                        />
+                        <CardContent>
+                            <h1>{pokemonList[i].title.charAt(0).toUpperCase() + pokemonList[i].title.slice(1)}</h1>
+                        </CardContent>
+                        <CardFooter>
+                            <Link onClick={() => {
+                                f7router.navigate('/detail/', {
+                                    props: {
+                                        myPokemonList: myPokemonList,
+                                        title: pokemonList[i].title.charAt(0).toUpperCase() + pokemonList[i].title.slice(1),
+                                        src: pokemonList[i].src,
+                                        moves: pokemonList[i].moves,
+                                        types: pokemonList[i].types,
+                                    }
+                                });
+                            }}><h3>Detail</h3></Link>
+                        </CardFooter>
+                    </Card>
+                </Col>
+            );
+        }
+        setListItem(listItemElement);
+    }, [f7router, myPokemonList, pokemonList]);
+
+    const loadMore = useCallback(() => { 
+        if (!consumePokeapi) setConsumePokeapi(true);
+    }, [consumePokeapi]);
 
     return (
         <Page 
@@ -159,7 +169,9 @@ const ListPage = ({ myPokemonList, f7router }) => {
                     });
                 }}>My Pokemon</Link>
             </Navbar>
-            {listItem}
+            <Row>
+                {listItem}
+            </Row>
         </Page>
     )
 }

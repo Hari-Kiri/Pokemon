@@ -3,7 +3,4 @@
 # misc
 .DS_Store
 
-# executable
-pokemon
-
 /ui/node_modules

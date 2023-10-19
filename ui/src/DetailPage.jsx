@@ -20,28 +20,26 @@ const ErrorAlertTitle = '<i class="icon f7-icons color-red" style="font-size: 35
 
 const DetailPage = ({ myPokemonList, title, src, moves, types, f7router }) => {
     const chipMoves = [];
-    const chipTypes = [];
-    const [listOfCatchedPokemon, setListOfCatchedPokemon] = useState(myPokemonList);
-    const [temporaryListOfCatchedPokemon, setTemporaryListOfCatchedPokemon] = useState(listOfCatchedPokemon
-        .filter((element) => { 
-            return element.species === title;
-        }));
-    const arrayPokemonSpeciesIndex = temporaryListOfCatchedPokemon.map(element => element.species);
-    const arrayPokemonSpeciesLastIndex = arrayPokemonSpeciesIndex.lastIndexOf(title);
-    const arrayPokemonSpeciesBeforeLastIndex = arrayPokemonSpeciesIndex.lastIndexOf(title) - 1;
-
     moves.forEach(element => {
         chipMoves.push(
-            <Chip text={element.move.name} />
+            <Chip key={element.move.name} text={element.move.name} />
         )
     });
 
+    const chipTypes = [];
     types.forEach(element => {
         chipTypes.push(
-            <Chip text={element.type.name} />
+            <Chip key={element.type.name} text={element.type.name} />
         );
     });
 
+    const [listOfCatchedPokemon, setListOfCatchedPokemon] = useState(myPokemonList);
+    const [temporaryListOfCatchedPokemon, setTemporaryListOfCatchedPokemon] = useState(listOfCatchedPokemon.filter((element) => { 
+        return element.species === title;
+    }));
+    const arrayPokemonSpeciesIndex = temporaryListOfCatchedPokemon.map(element => element.species);
+    const arrayPokemonSpeciesLastIndex = arrayPokemonSpeciesIndex.lastIndexOf(title);
+    const arrayPokemonSpeciesBeforeLastIndex = arrayPokemonSpeciesIndex.lastIndexOf(title) - 1;
     const catchPokemon = () => {
         f7.dialog.preloader('Catching Pokemon...');
         fetch('/pokemon/catch', {method: 'GET'})

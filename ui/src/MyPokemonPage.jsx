@@ -22,10 +22,10 @@ const MyPokemonPage = ({ myPokemonList, f7router }) => {
 
     listOfCatchedPokemon.forEach(element => {
         listOfPokemon.push(
-            <ListItem swipeout title={element.nickname} subtitle={element.species}>
+            <ListItem key={element.nickname} swipeout title={element.nickname} subtitle={element.species}>
                 <SwipeoutActions right>
                     <SwipeoutButton color="red" onClick={() => {
-                        f7.dialog.preloader(`Releasing ${element.nickname}...`);
+                        f7.dialog.preloader(`Release The ${element.nickname}...`);
                         fetch('/pokemon/release', {method: 'GET'})
                         .then((response) => response.json())
                         .then((response) => {

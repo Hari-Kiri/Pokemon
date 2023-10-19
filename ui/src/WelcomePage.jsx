@@ -1,16 +1,14 @@
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { 
     f7,
     Page, 
     Gauge 
 } from 'framework7-react';
 
-const WarningAlertTitle = '<i class="icon f7-icons color-orange" style="font-size: 35px;">exclamationmark</i>';
-
 const WelcomePage = ({f7router}) => {
     const [gaugeValue, setGaugeValue] = useState(0);
-
-    const openListPage = () => {
+    const WarningAlertTitle = '<i class="icon f7-icons color-orange" style="font-size: 35px;">exclamationmark</i>';
+    const openListPage = useCallback(() => {
         document.fonts.load('28px Framework7 Icons')
         .then(() => {
             setGaugeValue(0.97);
@@ -29,7 +27,7 @@ const WelcomePage = ({f7router}) => {
             );
             console.error('error:', error);
         });
-    };
+    }, [f7router]);
     
     return (
         <Page 
@@ -42,8 +40,8 @@ const WelcomePage = ({f7router}) => {
                 setGaugeValue(1);
             }}
         >
-            <div class="page-content display-flex flex-direction-column justify-content-center">
-                <div class="text-align-center">
+            <div className="page-content display-flex flex-direction-column justify-content-center">
+                <div className="text-align-center">
                     <Gauge
                         type="circle"
                         value={gaugeValue}
