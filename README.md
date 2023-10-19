@@ -15,7 +15,7 @@ Installation with docker:
 
 Run using executables:
 - Open build folder
-- Choose executable based on Your operating system
+- Choose executable based on Your operating system using command prompt
 
 Notes:
 - The default port for this application is 80, but You can change it in "settings.json" file.
